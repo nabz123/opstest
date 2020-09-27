@@ -30,7 +30,7 @@ makeUsers(){
 			
 			pass1=$(echo "$col2" | awk -F '/' '{print $1}')
 			pass2=$(echo "$col2" | awk -F '/' '{print $2}')
-			pass3=$pass2$p1
+			pass3=$pass2$pass1
  
 			g1=$(echo "$col3" | awk -F ',' '{print $2}')
 			g2=$(echo "$col3" | awk -F ',' '{print $1}')
