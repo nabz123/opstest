@@ -8,15 +8,15 @@ then
         exit 1
 fi
 
-echo "Loading...... $1"
-makeUsers(){
+echo "Accessing $1"
+createUsers(){
         IFS=";"
         file=$1
         i=0
 
         while read col1 col2 col3 col4
         do
-                ((i++))
+		((i++))
         if [[ $i > 1 ]]
         then
 			Fname=$(echo "$col1" | awk -F '@' '{print $1}' )
@@ -42,9 +42,9 @@ makeUsers(){
 			cat /etc/g1 | grep $g1
 			if [[ $? > 0 ]]
 			then
-					groupadd $g1
+				groupadd $g1
 			else
-					echo "Group already exists"
+				echo "Group already exists"
 			fi
         fi
         find /home$Directory > /dev/null 2>&1
@@ -56,8 +56,8 @@ makeUsers(){
         then
 			echo "Made /home$Directory"
         fi
-         chown root:$g1 /home$Directory
-         if [[ $? -eq 0 ]]
+		 chown root:$g1 /home$Directory
+		 if [[ $? -eq 0 ]]
         then
 			echo "$g1 owns $Directory"
         fi
@@ -101,5 +101,5 @@ fi
 
         done < $file
 }
-makeUsers $1
+createUsers $1
 
