@@ -26,7 +26,7 @@ makeUsers(){
 			Lname=$(echo "$col1" | awk -F '.' '{print $2}')
 			Lname=$(echo "$Lname" | awk -F '@' '{print $1}' )
 
-			Name="$Fname$Lname"
+			User="$Fname$Lname"
 			
 			pass1=$(echo "$col2" | awk -F '/' '{print $1}')
 			pass2=$(echo "$col2" | awk -F '/' '{print $2}')
@@ -47,7 +47,7 @@ makeUsers(){
 					echo "Group already exists"
 			fi
         fi
-         find /home$Directory > /dev/null 2>&1
+        find /home$Directory > /dev/null 2>&1
         if ! [[ $? -eq 0 ]]
         then
         mkdir /home$Directory
@@ -74,7 +74,7 @@ makeUsers(){
 			echo "$User has been created"
 
 			else
-			echo "$Name alraedy exists"
+			echo "$User alraedy exists"
 
 			fi
 
