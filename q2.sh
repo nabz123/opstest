@@ -19,108 +19,85 @@ makeUsers(){
                 ((i++))
         if [[ $i > 1 ]]
         then
-                Fname=$(echo "$col1" | awk -F '@' '{print $1}' )
-                Fname=$(echo "$Fname" | awk -F '.' '{print $1}')
-                Fname=${Fname::1}
+			Fname=$(echo "$col1" | awk -F '@' '{print $1}' )
+			Fname=$(echo "$Fname" | awk -F '.' '{print $1}')
+			Fname=${Fname::1}
 
-                Lname=$(echo "$col1" | awk -F '.' '{print $2}')
-                Lname=$(echo "$Lname" | awk -F '@' '{print $1}' )
+			Lname=$(echo "$col1" | awk -F '.' '{print $2}')
+			Lname=$(echo "$Lname" | awk -F '@' '{print $1}' )
 
-                Name="$Fname$Lname"
-                echo "$Name"
-                p1=$(echo "$col2" | awk -F '/' '{print $1}')
-                p2=$(echo "$col2" | awk -F '/' '{print $2}')
-                p3=$p2$p1
+			Name="$Fname$Lname"
+			
+			pass1=$(echo "$col2" | awk -F '/' '{print $1}')
+			pass2=$(echo "$col2" | awk -F '/' '{print $2}')
+			pass3=$pass2$p1
+ 
+			g1=$(echo "$col3" | awk -F ',' '{print $2}')
+			g2=$(echo "$col3" | awk -F ',' '{print $1}')
+ 
+			Directory=$(echo "$col4")
 
-                echo "$p3"
-                group=$(echo "$col3" | awk -F ',' '{print $2}')
-                g=$(echo "$col3" | awk -F ',' '{print $1}')
-
-                echo "$group"
-                Folder=$(echo "$col4")
-
-                echo "$Folder"
-
-        if ! [[ -z "$group" ]]
+        if ! [[ -z "$g1" ]]
         then
-                     cat /etc/group | grep $group
-                if [[ $? > 0 ]]
-                then
-                         groupadd $group
-                else
-                        echo "Group Already Exists"
-                fi
+			cat /etc/g1 | grep $g1
+			if [[ $? > 0 ]]
+			then
+					groupadd $g1
+			else
+					echo "Group already exists"
+			fi
         fi
-         find /home$Folder > /dev/null 2>&1
+         find /home$Directory > /dev/null 2>&1
         if ! [[ $? -eq 0 ]]
         then
-         mkdir /home$Folder
-         chmod 760 /home$Folder
+        mkdir /home$Directory
+        chmod 760 /home$Directory
         if [[ $? -eq 0 ]]
         then
-                echo "Made /home$Folder"
+			echo "Made /home$Directory"
         fi
-         chown root:$group /home$Folder
+         chown root:$g1 /home$Directory
          if [[ $? -eq 0 ]]
         then
-                echo "$group owns $Folder"
+			echo "$g1 owns $Directory"
         fi
 
         else
-                echo "$group  $Folder exists"
+			echo "$g1  $Directory already exists"
         fi
 
-        if [[ -z "$group" ]]
+        if [[ -z "$g1" ]]
         then
-        useradd -m -d /home/$Name -s /bin/bash  $Name
-                if [[ $? = 0 ]]
-                then
-                echo "Created user $Name"
+        useradd -m -d /home$User -s /bin/bash  $User
+			if [[ $? = 0 ]]
+			then
+			echo "$User has been created"
 
-                else
-                echo "$Name Exists"
+			else
+			echo "$Name alraedy exists"
 
-                fi
+			fi
 
-        else  useradd -m -d /home/$Name -s /bin/bash  $Name -G $g,$group
+        else  useradd -m -d /home$User -s /bin/bash  $User -G $g2,$g1
         fi
-                 echo "$Name:$p3" | sudo chpasswd
-                if [[ $? -eq 0 ]]
-                then
-                echo "Changed password"
-                fi
+			echo "$User:$p3" | sudo chpasswd
+			if [[ $? -eq 0 ]]
+			then
+			echo "Password has been changed"
+			fi
 
-
-
-        ln -s /home$Folder /home/$Name/shared
+        ln -s /home$Directory /home$User/shared
          if [[ $? -eq 0 ]]
         then
-                echo "Made link in /home$Folder to /home/$Name/shared"
+                echo "Created link in /home$Directory in /home$User/shared"
         else
-        echo "link exists"
+        echo "link already exists"
         fi
 
-
-
-        passwd -e $Name
-        echo "password set to  expire"
-
-
-
-
-
-
+        passwd -e $User
+        echo "password is set to expire"
 
 fi
-
-
-
-
-
-
-
-
-
 
         done < $file
 }
